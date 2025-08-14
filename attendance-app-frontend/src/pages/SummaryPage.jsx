@@ -29,7 +29,7 @@ export default function SummaryPage() {
 
         // Fetch students for this class
         const stuRes = await axios.get(
-          `http://localhost:3000/students?classId=${classId}`,
+          `https://attendance-app-backend-yb3f.onrender.com/students?classId=${classId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -39,7 +39,7 @@ export default function SummaryPage() {
         if (date) {
           // Fetch attendance session for selected date if date is present
           const attRes = await axios.get(
-            `http://localhost:3000/attendance?classId=${classId}&date=${date}`,
+            `https://attendance-app-backend-yb3f.onrender.com/attendance?classId=${classId}&date=${date}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -120,7 +120,7 @@ export default function SummaryPage() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:3000/attendance/student/${studentId}?classId=${classId}`,
+        `https://attendance-app-backend-yb3f.onrender.com/attendance/student/${studentId}?classId=${classId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

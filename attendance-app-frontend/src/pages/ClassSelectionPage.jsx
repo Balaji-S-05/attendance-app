@@ -13,7 +13,7 @@ export default function ClassSelectionPage() {
     const fetchClasses = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:3000/classes', {
+        const res = await axios.get('https://attendance-app-backend-yb3f.onrender.com/classes', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setClasses(res.data);

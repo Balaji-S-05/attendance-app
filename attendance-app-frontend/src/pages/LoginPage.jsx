@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
+  const navigate = useNavigate();
+
+  // ✅ Clear any old token on page load so HR never sees old session popup
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,8 +23,12 @@ export default function LoginPage() {
         username,
         password,
       });
+
+      // ✅ Save token
       localStorage.setItem("token", res.data.token);
-      navigate("/class-selection");
+
+      // ✅ Navigate without page reload
+      navigate("/class-selection", { replace: true });
     } catch (err) {
       setError("Invalid credentials, please try again.");
     }
@@ -39,38 +47,38 @@ export default function LoginPage() {
             required
           />
         </div>
-<div className="form-group" style={{ position: "relative", width: "100%" }}>
-  <input
-    type={showPass ? "text" : "password"}
-    placeholder="Password"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    required
-    style={{
-      width: "100%",
-      boxSizing: "border-box",
-      paddingRight: "2.5rem" // space for the emoji
-    }}
-  />
-  <span
-    onClick={() => setShowPass((show) => !show)}
-    tabIndex={0}
-    title={showPass ? "Hide Password" : "Show Password"}
-    aria-label={showPass ? "Hide Password" : "Show Password"}
-    style={{
-      position: "absolute",
-      right: "0.5rem",
-      top: "50%",
-      transform: "translateY(-50%)",
-      cursor: "pointer",
-      userSelect: "none",
-      fontSize: "1.2rem"
-    }}
-  >
-    {showPass ? "🙈" : "👁️"}
-  </span>
-</div>
 
+        <div className="form-group" style={{ position: "relative", width: "100%" }}>
+          <input
+            type={showPass ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{
+              width: "100%",
+              boxSizing: "border-box",
+              paddingRight: "2.5rem"
+            }}
+          />
+          <span
+            onClick={() => setShowPass((show) => !show)}
+            tabIndex={0}
+            title={showPass ? "Hide Password" : "Show Password"}
+            aria-label={showPass ? "Hide Password" : "Show Password"}
+            style={{
+              position: "absolute",
+              right: "0.5rem",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+              userSelect: "none",
+              fontSize: "1.2rem"
+            }}
+          >
+            {showPass ? "🙈" : "👁️"}
+          </span>
+        </div>
 
         <div className="form-group">
           <button type="submit" className="login-button">

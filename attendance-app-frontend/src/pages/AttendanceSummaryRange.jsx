@@ -30,7 +30,7 @@ export default function AttendanceSummaryRange() {
     }
 
     try {
-      const res = await axios.get('http://localhost:3000/attendance/summary-range', {
+      const res = await axios.get('https://attendance-app-backend-yb3f.onrender.com/attendance/summary-range', {
         headers: {
           Authorization: `Bearer ${token}`
         },

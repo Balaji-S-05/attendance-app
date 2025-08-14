@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import ClassSelectionPage from './pages/ClassSelectionPage';
 import AttendancePage from './pages/AttendancePage';
@@ -7,38 +7,63 @@ import SummaryPage from './pages/SummaryPage';
 import AttendanceSummaryRange from './pages/AttendanceSummaryRange';
 import './app.css';
 
+function ProtectedRoute({ children }) {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      navigate("/login", { replace: true });
+    }
+  }, [navigate]);
+
+  return isAuthenticated ? children : null;
+}
 
 function App() {
-  // A simple auth check (replace with real from context or localStorage)
-  const isAuthenticated = !!localStorage.getItem('token');
-  // const someClassId = "688debfd343520dd98ec7e9a";
-
-
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        
-        Protect routes
-        <Route 
-          path="/class-selection" 
-          element={isAuthenticated ? <ClassSelectionPage /> : <Navigate to="/login" />} 
-        />
-        <Route 
-          path="/attendance" 
-          element={isAuthenticated ? <AttendancePage /> : <Navigate to="/login" />} 
-        />
-        <Route 
-          path="/summary" 
-          element={isAuthenticated ? <SummaryPage /> : <Navigate to="/login" />} 
-        />
-      <Route 
-  path="/attendance-summary-range" 
-  element={isAuthenticated ? <AttendanceSummaryRange /> : <Navigate to="/login" />}
-/>
 
+        <Route
+          path="/class-selection"
+          element={
+            <ProtectedRoute>
+              <ClassSelectionPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance"
+          element={
+            <ProtectedRoute>
+              <AttendancePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/summary"
+          element={
+            <ProtectedRoute>
+              <SummaryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance-summary-range"
+          element={
+            <ProtectedRoute>
+              <AttendanceSummaryRange />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="*" element={<Navigate to={isAuthenticated ? "/class-selection" : "/login"} />} />
+        {/* Default route */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

@@ -23,13 +23,13 @@ export default function AttendancePage() {
       try {
         const token = localStorage.getItem('token');
         // Fetch students
-        const stuRes = await axios.get(`http://localhost:3000/students?classId=${classId}`, {
+        const stuRes = await axios.get(`https://attendance-app-backend-yb3f.onrender.com/students?classId=${classId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setStudents(stuRes.data);
 
         // Fetch existing attendance if editing
-        const attRes = await axios.get(`http://localhost:3000/attendance?classId=${classId}&date=${date}`, {
+        const attRes = await axios.get(`https://attendance-app-backend-yb3f.onrender.com/attendance?classId=${classId}&date=${date}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -105,7 +105,7 @@ export default function AttendancePage() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:3000/attendance/submit', {
+      await axios.post('https://attendance-app-backend-yb3f.onrender.com/attendance/submit', {
         classId,
         date,
         time: new Date().toLocaleTimeString(),
